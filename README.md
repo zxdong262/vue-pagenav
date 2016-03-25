@@ -41,7 +41,7 @@ Vue.use(zPagenav)
 
 // create instance
 new Vue({
-  el: '#demo',
+  el: '#test',
   data: {
     page: 1 //page
     ,pageSize: 10 //pageSize
