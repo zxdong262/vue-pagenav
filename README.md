@@ -9,7 +9,7 @@ a vue pagenav.plugin
 ```bash
 bower install vue-pagenav
 #or 
-bower install vue-pagenav
+npm install vue-pagenav
 ```
 
 ## use
