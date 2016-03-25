@@ -1,5 +1,5 @@
 # vue-pagenav
-a vue pagenav.plugin
+a vue pagenav plugin
 
 ## check the demo
 
