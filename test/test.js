@@ -19,13 +19,13 @@ describe('vue-pagenav', function () {
 		var element = $(elem).appendTo(sandboxEl)
 		Vue.use(window.zPagenav, initOption)
 		var defs = {
-	    el: '#test'
-	    ,data: {
-	      page: 1
-	      ,pageSize: 10
-	      ,total: 509
-	      ,maxLink: 5
-	    }
+			el: '#test'
+			,data: {
+				page: 1
+				,pageSize: 10
+				,total: 509
+				,maxLink: 5
+			}
 		}
 		if(data) $.extend(defs.data, data)
 
