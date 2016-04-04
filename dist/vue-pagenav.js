@@ -1,6 +1,6 @@
 /**
  * vue-pagenav
- * @version v1.0.0 - 2016-03-24
+ * @version v1.0.2 - 2016-04-04
  * @link http://html5beta.com/apps/vue-pagenav.html
  * @author ZHAO Xudong (zxdong@gmail.com)
  * @license MIT License, http://www.opensource.org/licenses/MIT
@@ -88,7 +88,7 @@ zPagenav.install = function() {
 				var dotUnit = {
 					class: 'disabled'
 					,page: page
-					,isPager: true
+					,isPager: false
 					,isPrev: false
 					,isNext: true
 					,html: option.dotsHtml

@@ -80,7 +80,7 @@ zPagenav.install = function() {
 				var dotUnit = {
 					class: 'disabled'
 					,page: page
-					,isPager: true
+					,isPager: false
 					,isPrev: false
 					,isNext: true
 					,html: option.dotsHtml

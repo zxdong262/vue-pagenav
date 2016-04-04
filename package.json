@@ -1,7 +1,7 @@
 {
   "name": "vue-pagenav",
   "description": "a vuejs pagenav plugin",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "keywords": [
     "vuejs",
     "pagenav"
