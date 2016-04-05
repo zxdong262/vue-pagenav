@@ -1,4 +1,5 @@
 # vue-pagenav
+[![Build Status](https://travis-ci.org/zxdong262/vue-pagenav.svg?branch=master)](https://travis-ci.org/zxdong262/vue-pagenav)
 a vue pagenav plugin
 
 ## check the demo
