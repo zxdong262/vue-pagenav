@@ -1,6 +1,6 @@
 /**
  * vue-pagenav
- * @version v1.0.2 - 2016-04-04
+ * @version v1.0.3 - 2016-04-12
  * @link http://html5beta.com/apps/vue-pagenav.html
  * @author ZHAO Xudong (zxdong@gmail.com)
  * @license MIT License, http://www.opensource.org/licenses/MIT
@@ -34,7 +34,7 @@ var zPagenav = {
 
 }
 
-zPagenav.install = function() {
+zPagenav.install = function(Vue) {
 
 	// define & register
 	Vue.component('zpagenav', {

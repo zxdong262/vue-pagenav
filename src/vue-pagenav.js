@@ -26,7 +26,7 @@ var zPagenav = {
 
 }
 
-zPagenav.install = function() {
+zPagenav.install = function(Vue) {
 
 	// define & register
 	Vue.component('zpagenav', {
