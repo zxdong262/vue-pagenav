@@ -26,6 +26,11 @@ describe('vue-pagenav', function () {
 				,total: 509
 				,maxLink: 5
 			}
+			,events: {
+				'page-change': function() {
+					$('#test').data('events', 'yes')
+				}
+			}
 		}
 		if(data) $.extend(defs.data, data)
 
@@ -114,6 +119,65 @@ describe('vue-pagenav', function () {
 	})
 
 	describe('event', function () {
+
+		it('dispatch event', function(done) {
+			var vmm = prepare()
+
+			Vue.nextTick(function() {
+				var pts = $('#test').find('.page-item')
+				expect(pts.length).to.equal(8)
+				$('#test .page-item').eq(2).trigger('click')
+				Vue.nextTick(function() {
+					var pts = $('#test').find('.page-item')
+					expect(pts.length).to.equal(8)
+					expect($('#test').find('.page-item.active').text()).to.equal('2')
+					expect(vmm.page === 2)
+					expect($('#test').data('event') === 'yes')
+					done()
+				})
+
+			})
+		})
+
+		it('dispatch event with custom name', function(done) {
+
+			var elem = '<div id="test"><zpagenav v-bind:page.sync="page", v-bind:page-size.sync="pageSize", v-bind:total.sync="total", v-bind:max-link.sync="maxLink" event-name="eventName"><zpagenav></div>'
+			
+			var element = $(elem).appendTo(sandboxEl)
+			Vue.use(window.zPagenav)
+			var defs = {
+				el: '#test'
+				,data: {
+					page: 1
+					,pageSize: 10
+					,total: 509
+					,maxLink: 5
+					,eventName: 'custom'
+				}
+				,events: {
+					'custom': function(page) {
+						$('#test').data('events', page)
+					}
+				}
+			}
+
+			var vmm = new Vue(defs)
+
+			Vue.nextTick(function() {
+				var pts = $('#test').find('.page-item')
+				expect(pts.length).to.equal(8)
+				$('#test .page-item').eq(2).trigger('click')
+				Vue.nextTick(function() {
+					var pts = $('#test').find('.page-item')
+					expect(pts.length).to.equal(8)
+					expect($('#test').find('.page-item.active').text()).to.equal('2')
+					expect(vmm.page === 2)
+					expect($('#test').data('event') === 8)
+					done()
+				})
+
+			})
+		})
 
 		it('click link page=2', function(done) {
 			var vmm = prepare()

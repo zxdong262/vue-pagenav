@@ -1,6 +1,6 @@
 /**
  * vue-pagenav
- * @version v1.0.3 - 2016-04-12
+ * @version v1.1.0 - 2016-04-17
  * @link http://html5beta.com/apps/vue-pagenav.html
  * @author ZHAO Xudong (zxdong@gmail.com)
  * @license MIT License, http://www.opensource.org/licenses/MIT
@@ -17,6 +17,7 @@ var zPagenav = {
 		,prevSrHtml: 'Previous'
 		,nextSrHtml: 'Next'
 		,dotsHtml: '...'
+		,eventName: 'page-change'
 		,template: 
 			'<nav class="zpagenav" >' +
 				'<span class="pagination page-link m-r-1">total:{{total}}</span>' +
@@ -44,11 +45,13 @@ zPagenav.install = function(Vue) {
 			,total: Number
 			,pageSize: Number
 			,maxLink: Number
+			,eventName: String
 		}
 		,methods: {
 			setPage: function(page) {
 				if(page === this.page) return false
 				this.page = page
+				this.$dispatch(this.eventName || zPagenav.default.eventName, page)
 			}
 		}
 		,computed: {

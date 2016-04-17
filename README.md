@@ -26,7 +26,7 @@ npm install vue-pagenav
 ```html
 
 <div id="test">
-  <zpagenav v-bind:page.sync="page", v-bind:page-size="pageSize", v-bind:total="total", v-bind:max-link="maxLink"><zpagenav>
+  <zpagenav :page.sync="page", :page-size="pageSize", :total="total", :max-link="maxLink" event-name="eventName" ><zpagenav>
 </div>
 
 ```
@@ -46,9 +46,19 @@ new Vue({
   el: '#test',
   data: {
     page: 1 //page
-    ,pageSize: 10 //pageSize
+    ,pageSize: 10 //pageSize,  default is 10
     ,total: 509 //total item count
-    ,maxLink: 5 //how many links to show, must not less than 5
+    ,maxLink: 5 //how many links to show, must not less than 5,  default is 5
+
+    // page change event name, default is 'page-change',
+    // optional
+    // for different pagenav, should use different name
+    ,eventName: 'custom' 
+  }
+  ,events: {
+    'custom': function(page) {
+      console.log(page)
+    }
   }
 })
 ```

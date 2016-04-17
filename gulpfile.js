@@ -3,13 +3,14 @@ var gulp = require('gulp')
 var path = require('path')
 var util = require('util')
 var gutil = require('gulp-util')
-var changed = require('gulp-changed')
 var pkg = require('./package.json')
 var fs = require('fs')
 var rename = require('gulp-rename')
 var plumber = require('gulp-plumber')
-
-
+var uglify = require('gulp-uglify')
+var concat = require('gulp-concat-util')
+var karma = require('karma').server
+var runSequence = require('run-sequence')
 // CONFIG
 //
 
@@ -27,27 +28,10 @@ var banner = gutil.template('/**\n' +
 	' */\n', {file: '', pkg: pkg, today: new Date().toISOString().substr(0, 10)})
 
 
-// CLEAN
-//
-var clean = require('gulp-clean')
-gulp.task('clean:test', function() {
-	return gulp.src(['test/.tmp/*', 'test/coverage/*'], {read: false})
-		.pipe(clean())
-})
-gulp.task('clean:dist', function() {
-	return gulp.src([src.dist + '/*'], {read: false})
-		.pipe(clean())
-})
-
-
 // SCRIPTS
-//
-var uglify = require('gulp-uglify')
-var concat = require('gulp-concat-util')
-
 gulp.task('scripts:dist', function() {
 
-// Build unified package
+// Build package
 gulp.src(['./src/vue-pagenav.js'])
 	.pipe(concat.header('(function(window, document, undefined) {\n'))
 	.pipe(concat.footer('\n\n})(window, document);\n'))
@@ -62,9 +46,7 @@ gulp.src(['./src/vue-pagenav.js'])
 })
 
 // TEST
-//
 
-var karma = require('karma').server
 
 gulp.task('karma:unit', function() {
 	karma.start({
@@ -79,14 +61,11 @@ gulp.task('karma:unit', function() {
 })
 
 // DEFAULT
-var runSequence = require('run-sequence')
-
 gulp.task('default', ['dist'])
 gulp.task('build', ['dist'])
-gulp.task('test', function() {
-	runSequence('clean:test', 'karma:unit')
+gulp.task('test', ['karma:unit'])
+gulp.task('dist', ['scripts:dist'])
+gulp.task('dt', function() {
+	runSequence('dist', 'test')
 })
 
-gulp.task('dist', function() {
-	runSequence('clean:dist', 'scripts:dist')
-})

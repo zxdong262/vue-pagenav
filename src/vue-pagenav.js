@@ -9,6 +9,7 @@ var zPagenav = {
 		,prevSrHtml: 'Previous'
 		,nextSrHtml: 'Next'
 		,dotsHtml: '...'
+		,eventName: 'page-change'
 		,template: 
 			'<nav class="zpagenav" >' +
 				'<span class="pagination page-link m-r-1">total:{{total}}</span>' +
@@ -36,11 +37,13 @@ zPagenav.install = function(Vue) {
 			,total: Number
 			,pageSize: Number
 			,maxLink: Number
+			,eventName: String
 		}
 		,methods: {
 			setPage: function(page) {
 				if(page === this.page) return false
 				this.page = page
+				this.$dispatch(this.eventName || zPagenav.default.eventName, page)
 			}
 		}
 		,computed: {
