@@ -1,6 +1,6 @@
 /**
  * vue-pagenav
- * @version v1.1.0 - 2016-04-17
+ * @version v1.1.1 - 2016-04-17
  * @link http://html5beta.com/apps/vue-pagenav.html
  * @author ZHAO Xudong (zxdong@gmail.com)
  * @license MIT License, http://www.opensource.org/licenses/MIT

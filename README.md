@@ -26,7 +26,7 @@ npm install vue-pagenav
 ```html
 
 <div id="test">
-  <zpagenav :page.sync="page", :page-size="pageSize", :total="total", :max-link="maxLink" event-name="eventName" ><zpagenav>
+  <zpagenav :page.sync="page", :page-size="pageSize", :total="total", :max-link="maxLink" :event-name="eventName" ><zpagenav>
 </div>
 
 ```

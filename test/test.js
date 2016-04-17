@@ -132,7 +132,7 @@ describe('vue-pagenav', function () {
 					expect(pts.length).to.equal(8)
 					expect($('#test').find('.page-item.active').text()).to.equal('2')
 					expect(vmm.page === 2)
-					expect($('#test').data('event') === 'yes')
+					expect($('#test').data('events')).to.equal('yes')
 					done()
 				})
 
@@ -141,7 +141,7 @@ describe('vue-pagenav', function () {
 
 		it('dispatch event with custom name', function(done) {
 
-			var elem = '<div id="test"><zpagenav v-bind:page.sync="page", v-bind:page-size.sync="pageSize", v-bind:total.sync="total", v-bind:max-link.sync="maxLink" event-name="eventName"><zpagenav></div>'
+			var elem = '<div id="test"><zpagenav v-bind:page.sync="page", v-bind:page-size.sync="pageSize", v-bind:total.sync="total", v-bind:max-link.sync="maxLink" :event-name="eventName"><zpagenav></div>'
 			
 			var element = $(elem).appendTo(sandboxEl)
 			Vue.use(window.zPagenav)
@@ -172,7 +172,7 @@ describe('vue-pagenav', function () {
 					expect(pts.length).to.equal(8)
 					expect($('#test').find('.page-item.active').text()).to.equal('2')
 					expect(vmm.page === 2)
-					expect($('#test').data('event') === 8)
+					expect($('#test').data('events')).to.equal(2)
 					done()
 				})
 
