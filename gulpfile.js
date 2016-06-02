@@ -1,16 +1,18 @@
 
-var gulp = require('gulp')
-var path = require('path')
-var util = require('util')
-var gutil = require('gulp-util')
-var pkg = require('./package.json')
-var fs = require('fs')
-var rename = require('gulp-rename')
-var plumber = require('gulp-plumber')
-var uglify = require('gulp-uglify')
-var concat = require('gulp-concat-util')
-var karma = require('karma').server
-var runSequence = require('run-sequence')
+const
+gulp = require('gulp')
+,path = require('path')
+,util = require('util')
+,gutil = require('gulp-util')
+,pkg = require('./package.json')
+,fs = require('fs')
+,rename = require('gulp-rename')
+,plumber = require('gulp-plumber')
+,uglify = require('gulp-uglify')
+,concat = require('gulp-concat-util')
+,karma = require('karma').server
+,runSequence = require('run-sequence')
+,watch = require('gulp-watch')
 // CONFIG
 //
 
@@ -31,17 +33,17 @@ var banner = gutil.template('/**\n' +
 // SCRIPTS
 gulp.task('scripts:dist', function() {
 
-// Build package
-gulp.src(['./src/vue-pagenav.js'])
-	.pipe(concat.header('(function(window, document, undefined) {\n'))
-	.pipe(concat.footer('\n\n})(window, document);\n'))
-	.pipe(concat.header(banner))
-	.pipe(gulp.dest(src.dist))
-	.pipe(rename(function(path) { path.extname = '.min.js'; }))
-	.pipe(plumber())
-	.pipe(uglify())
-	.pipe(concat.header(banner))
-	.pipe(gulp.dest(src.dist))
+	// Build package
+	gulp.src(['./src/vue-pagenav.js'])
+		.pipe(concat.header('(function(window, document, undefined) {\n'))
+		.pipe(concat.footer('\n\n})(window, document);\n'))
+		.pipe(concat.header(banner))
+		.pipe(gulp.dest(src.dist))
+		.pipe(rename(function(path) { path.extname = '.min.js'; }))
+		.pipe(plumber())
+		.pipe(uglify())
+		.pipe(concat.header(banner))
+		.pipe(gulp.dest(src.dist))
 
 })
 
@@ -60,8 +62,18 @@ gulp.task('karma:unit', function() {
 	})
 })
 
+
+//watch
+gulp.task('watch-file',  function () {
+
+	watch([src.cwd + '/vue-pagenav.js', __dirname + '/package.json'], function() {
+		runSequence('scripts:dist')
+	})
+
+})
+
 // DEFAULT
-gulp.task('default', ['dist'])
+gulp.task('default', ['watch-file'])
 gulp.task('build', ['dist'])
 gulp.task('test', ['karma:unit'])
 gulp.task('dist', ['scripts:dist'])

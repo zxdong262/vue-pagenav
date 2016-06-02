@@ -1,11 +1,12 @@
 /**
  * vue-pagenav
- * @version v1.1.1 - 2016-04-17
+ * @version v1.1.1 - 2016-06-02
  * @link http://html5beta.com/apps/vue-pagenav.html
  * @author ZHAO Xudong (zxdong@gmail.com)
  * @license MIT License, http://www.opensource.org/licenses/MIT
  */
 (function(window, document, undefined) {
+
 var zPagenav = {
 
 	default: {
@@ -140,7 +141,7 @@ zPagenav.install = function(Vue) {
 					var arr = [1]
 					if(s2 > 2) arr.push('dot')
 					var it
-					for(var i = 0, len = realMaxLink - 2;i < len;i ++) {
+					for(var i = 0, len = realMaxLink - 2 < 1?realMaxLink - 1:realMaxLink - 2;i < len;i ++) {
 						it = i + s2
 						arr.push(it)
 					}

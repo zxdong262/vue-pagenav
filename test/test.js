@@ -51,6 +51,29 @@ describe('vue-pagenav', function () {
 			})
 		})
 
+		it('only one page', function(done) {
+			var vmm = prepare({
+				pageSize: 509
+			})
+			Vue.nextTick(function() {
+				var pts = $('#test').find('.page-item')
+				expect(pts.length).to.equal(3)
+				done()
+			})
+		})
+
+
+		it('only two page', function(done) {
+			var vmm = prepare({
+				pageSize: 508
+			})
+			Vue.nextTick(function() {
+				var pts = $('#test').find('.page-item')
+				expect(pts.length).to.equal(4)
+				done()
+			})
+		})
+
 	})
 
 	describe('options', function () {

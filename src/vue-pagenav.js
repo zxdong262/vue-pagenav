@@ -1,3 +1,4 @@
+
 var zPagenav = {
 
 	default: {
@@ -132,7 +133,7 @@ zPagenav.install = function(Vue) {
 					var arr = [1]
 					if(s2 > 2) arr.push('dot')
 					var it
-					for(var i = 0, len = realMaxLink - 2;i < len;i ++) {
+					for(var i = 0, len = realMaxLink - 2 < 1?realMaxLink - 1:realMaxLink - 2;i < len;i ++) {
 						it = i + s2
 						arr.push(it)
 					}
