@@ -1,11 +1,20 @@
 /**
  * vue-pagenav
- * @version v1.1.1 - 2016-06-02
+ * @version v1.2.0 - 2016-06-28
  * @link http://html5beta.com/apps/vue-pagenav.html
  * @author ZHAO Xudong (zxdong@gmail.com)
  * @license MIT License, http://www.opensource.org/licenses/MIT
  */
-(function(window, document, undefined) {
+
+;(function(root, factory) {
+  if (typeof define === 'function' && define.amd) {
+    define([], factory);
+  } else if (typeof exports === 'object') {
+    module.exports = exports.default = factory();
+  } else {
+    root.zPagenav = factory();
+  }
+}(this, function() {
 
 var zPagenav = {
 
@@ -158,12 +167,5 @@ zPagenav.install = function(Vue) {
 }
 
 
-if (typeof exports == "object") {
-	module.exports = zPagenav
-} else if (typeof define == "function" && define.amd) {
-	define([], function(){ return zPagenav })
-} else if (window.Vue) {
-	window.zPagenav = zPagenav
-}
-
-})(window, document);
+return zPagenav;
+}));

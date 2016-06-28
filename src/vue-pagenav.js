@@ -149,11 +149,3 @@ zPagenav.install = function(Vue) {
 	})
 }
 
-
-if (typeof exports == "object") {
-	module.exports = zPagenav
-} else if (typeof define == "function" && define.amd) {
-	define([], function(){ return zPagenav })
-} else if (window.Vue) {
-	window.zPagenav = zPagenav
-}

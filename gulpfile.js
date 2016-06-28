@@ -13,36 +13,60 @@ gulp = require('gulp')
 ,karma = require('karma').server
 ,runSequence = require('run-sequence')
 ,watch = require('gulp-watch')
+,umd = require('gulp-umd')
 // CONFIG
 //
+
+var umdOption = {
+  dependencies: function(file) {
+    return [];
+  },
+  exports: function(file) {
+    return 'zPagenav';
+  },
+  namespace: function(file) {
+    return 'zPagenav'
+  }
+}
+
+
+var rep = function(src, filePath) { 
+	console.log(filePath)
+	return src.replace('module.exports = factory()', 'module.exports = exports.default = factory()')
+}
+
 
 var src = {
 	cwd: 'src'
 	,dist: 'dist'
 }
 
-var banner = gutil.template('/**\n' +
+function banner() {
+	var pkg = JSON.parse(fs.readFileSync('package.json').toString())
+	return gutil.template('/**\n' +
 	' * <%= pkg.name %>\n' +
 	' * @version v<%= pkg.version %> - <%= today %>\n' +
 	' * @link <%= pkg.homepage %>\n' +
 	' * @author <%= pkg.author.name %> (<%= pkg.author.email %>)\n' +
 	' * @license MIT License, http://www.opensource.org/licenses/MIT\n' +
-	' */\n', {file: '', pkg: pkg, today: new Date().toISOString().substr(0, 10)})
+	' */\n\n', { file: '', pkg: pkg, today: new Date().toISOString().substr(0, 10) })
 
+}
 
 // SCRIPTS
 gulp.task('scripts:dist', function() {
 
 	// Build package
 	gulp.src(['./src/vue-pagenav.js'])
-		.pipe(concat.header('(function(window, document, undefined) {\n'))
-		.pipe(concat.footer('\n\n})(window, document);\n'))
-		.pipe(concat.header(banner))
+		.pipe(umd(umdOption))
+		.pipe( concat('vue-pagenav.js', { process: rep }) )
+		.pipe(concat.header(banner()))
 		.pipe(gulp.dest(src.dist))
 		.pipe(rename(function(path) { path.extname = '.min.js'; }))
 		.pipe(plumber())
 		.pipe(uglify())
-		.pipe(concat.header(banner))
+
+		.pipe(concat.header(banner()))
 		.pipe(gulp.dest(src.dist))
 
 })
