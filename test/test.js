@@ -8,14 +8,18 @@ describe('vue-pagenav', function () {
 		sandboxEl = $('<div>').attr('id', 'sandbox').appendTo($('body'))
 	})
 
+  var clickEvent = $.Event('click')
+
 	afterEach(function() {
 		vmm.$destroy()
 		$('#sandbox').remove(	)
 	})
 
-	var elem = '<div id="test"><zpagenav v-bind:page="page", v-bind:page-size="pageSize", v-bind:total="total", v-bind:max-link.sync="maxLink" v-bind:page-handler="pageHandler"><zpagenav></div>'
-	
-	function prepare(data, initOption) {
+	var elem = '<div id="test"><zpagenav :page="page", :page-size="pageSize", :total="total", :event-name="eventName", :max-link.sync="maxLink" :page-handler="pageHandler"><zpagenav></div>'
+
+	var nextTick = Vue.nextTick
+
+	function prepare(data, initOption, methods, events) {
 		var element = $(elem).appendTo(sandboxEl)
 		Vue.use(window.zPagenav, initOption)
 		var defs = {
@@ -33,12 +37,15 @@ describe('vue-pagenav', function () {
 				}
 			}
 			,events: {
-				'page-change': function() {
+				'page-change': function(page) {
+					this.page = page
 					$('#test').data('events', 'yes')
 				}
 			}
 		}
 		if(data) $.extend(defs.data, data)
+		if(methods) defs.methods = methods
+		if(events) defs.events = events
 
 		vmm = new Vue(defs)
 		return vmm
@@ -50,7 +57,7 @@ describe('vue-pagenav', function () {
 
 		it('init', function(done) {
 			var vmm = prepare()
-			Vue.nextTick(function() {
+			nextTick(function() {
 				var pts = $('#test').find('.page-item')
 				expect(pts.length).to.equal(8)
 				done()
@@ -61,7 +68,7 @@ describe('vue-pagenav', function () {
 			var vmm = prepare({
 				pageSize: 509
 			})
-			Vue.nextTick(function() {
+			nextTick(function() {
 				var pts = $('#test').find('.page-item')
 				expect(pts.length).to.equal(3)
 				done()
@@ -73,7 +80,7 @@ describe('vue-pagenav', function () {
 			var vmm = prepare({
 				pageSize: 508
 			})
-			Vue.nextTick(function() {
+			nextTick(function() {
 				var pts = $('#test').find('.page-item')
 				expect(pts.length).to.equal(4)
 				done()
@@ -88,7 +95,7 @@ describe('vue-pagenav', function () {
 			var vmm = prepare({
 				page: 4
 			})
-			Vue.nextTick(function() {
+			nextTick(function() {
 				var pts = $('#test').find('.page-item')
 				expect(pts.length).to.equal(9)
 				expect($('#test').find('.page-item.active').text()).to.equal('4')
@@ -101,7 +108,7 @@ describe('vue-pagenav', function () {
 				maxLink: 100
 				,total: 503
 			})
-			Vue.nextTick(function() {
+			nextTick(function() {
 				var pts = $('#test').find('.page-item')
 				expect(pts.length).to.equal(53)
 				expect($('#test').find('.page-item.active').text()).to.equal('1')
@@ -113,7 +120,7 @@ describe('vue-pagenav', function () {
 			var vmm = prepare({
 				maxLink: 1
 			})
-			Vue.nextTick(function() {
+			nextTick(function() {
 				var pts = $('#test').find('.page-item')
 				expect(pts.length).to.equal(8)
 				expect($('#test').find('.page-item.active').text()).to.equal('1')
@@ -125,7 +132,7 @@ describe('vue-pagenav', function () {
 			var vmm = prepare({
 				total: 1
 			})
-			Vue.nextTick(function() {
+			nextTick(function() {
 				var pts = $('#test').find('.page-item')
 				expect(pts.length).to.equal(3)
 				expect($('#test').find('.page-item.active').text()).to.equal('1')
@@ -137,7 +144,7 @@ describe('vue-pagenav', function () {
 			var vmm = prepare({
 				total: 1
 			})
-			Vue.nextTick(function() {
+			nextTick(function() {
 				var pts = $('#test').find('.page-item')
 				expect(pts.length).to.equal(3)
 				expect($('#test').find('.page-item.active').text()).to.equal('1')
@@ -151,54 +158,43 @@ describe('vue-pagenav', function () {
 
 		it('dispatch event with custom name', function(done) {
 
-			var elem = '<div id="test"><zpagenav :page="page", :page-size="pageSize", :total="total", :max-link="maxLink" :event-name="eventName"><zpagenav></div>'
-			
-			var element = $(elem).appendTo(sandboxEl)
-			Vue.use(window.zPagenav)
-			var defs = {
-				el: '#test'
-				,data: {
-					page: 1
-					,pageSize: 10
-					,total: 509
-					,maxLink: 5
-					,eventName: 'custom'
+			var vmm = prepare({
+				eventName: 'custom'
+			}, {}, {}, {
+				custom: function(page) {
+					console.log(page, 'custom page event fiires')
+					this.page = page
+					$('#test').data('events', 'yes')
 				}
-				,events: {
-					'custom': function(page) {
-						console.log(page, 'encet')
-						this.page = page
-						$('#test').data('events', page)
-					}
-				}
-			}
+			})
 
-			var vmm = new Vue(defs)
-
-			Vue.nextTick(function() {
+			nextTick(function() {
 				var pts = $('#test').find('.page-item')
 				expect(pts.length).to.equal(8)
-				$('#test .page-item').eq(2).trigger('click')
-				Vue.nextTick(function() {
+				console.log($('#test .page-item').eq(3).html())
+				$('#test .page-item').eq(3).children('a').eq(0).trigger(clickEvent)
+
+				nextTick(function() {
 					var pts = $('#test').find('.page-item')
 					expect(pts.length).to.equal(8)
-					expect($('#test').find('.page-item.active').text()).to.equal('2')
-					expect(vmm.page === 2)
-					expect($('#test').data('events')).to.equal(2)
+					expect($('#test').find('.page-item.active').text()).to.equal('3')
+					expect(vmm.page === 3)
+					expect($('#test').data('events')).to.equal(3)
 					done()
 				})
 
 			})
+
 		})
 
 		it('click link page=2', function(done) {
 			var vmm = prepare()
 
-			Vue.nextTick(function() {
+			nextTick(function() {
 				var pts = $('#test').find('.page-item')
 				expect(pts.length).to.equal(8)
-				$('#test .page-item').eq(2).trigger('click')
-				Vue.nextTick(function() {
+				$('#test .page-item').eq(2).children('a').trigger(clickEvent)
+				nextTick(function() {
 					var pts = $('#test').find('.page-item')
 					expect(pts.length).to.equal(8)
 					expect($('#test').find('.page-item.active').text()).to.equal('2')
@@ -212,11 +208,11 @@ describe('vue-pagenav', function () {
 		it('click link pagenext', function(done) {
 			var vmm = prepare()
 
-			Vue.nextTick(function() {
+			nextTick(function() {
 				var pts = $('#test').find('.page-item')
 				expect(pts.length).to.equal(8)
-				$('#test .page-item:last').trigger('click')
-				Vue.nextTick(function() {
+				$('#test .page-item:last').children('a').eq(0).trigger(clickEvent)
+				nextTick(function() {
 					var pts = $('#test').find('.page-item')
 					expect(pts.length).to.equal(8)
 					expect($('#test').find('.page-item.active').text()).to.equal('2')
@@ -230,11 +226,11 @@ describe('vue-pagenav', function () {
 		it('click link page=51', function(done) {
 			var vmm = prepare()
 
-			Vue.nextTick(function() {
+			nextTick(function() {
 				var pts = $('#test').find('.page-item')
 				expect(pts.length).to.equal(8)
-				$('#test .page-item').eq(6).trigger('click')
-				Vue.nextTick(function() {
+				$('#test .page-item').eq(6).children('a').eq(0).trigger(clickEvent)
+				nextTick(function() {
 					var pts = $('#test').find('.page-item')
 					expect(pts.length).to.equal(8)
 					expect($('#test').find('.page-item.active').text()).to.equal('51')
@@ -251,12 +247,12 @@ describe('vue-pagenav', function () {
 
 		it('vmm.total and vmm.page change', function(done) {
 			var vmm = prepare()
-			Vue.nextTick(function() {
+			nextTick(function() {
 				var pts = $('#test').find('.page-item')
 				expect(pts.length).to.equal(8)
 				vmm.total = 400
 				vmm.page = 6
-				Vue.nextTick(function() {
+				nextTick(function() {
 					var pts = $('#test').find('.page-item')
 					expect(pts.length).to.equal(9)
 					expect($('#test').find('.page-item.active').text()).to.equal('6')
@@ -268,12 +264,12 @@ describe('vue-pagenav', function () {
 
 		it('vmm.pageSize change', function(done) {
 			var vmm = prepare()
-			Vue.nextTick(function() {
+			nextTick(function() {
 				var pts = $('#test').find('.page-item')
 				expect(pts.length).to.equal(8)
 				vmm.total = 400
 				vmm.pageSize = 20
-				Vue.nextTick(function() {
+				nextTick(function() {
 					var pts = $('#test').find('.page-item')
 					expect(pts.length).to.equal(8)
 					expect($('#test').find('.page-item.active').text()).to.equal('1')
@@ -291,7 +287,7 @@ describe('vue-pagenav', function () {
 		it('prev text', function(done) {
 			zPagenav.default.prevHtml = 'prev'
 			var vmm = prepare()
-			Vue.nextTick(function() {
+			nextTick(function() {
 				var pts = $('#test').find('.page-item')
 				expect($('#test').find('.page-item').eq(0).find('span').eq(0).text()).to.equal('prev')
 				done()
@@ -301,7 +297,7 @@ describe('vue-pagenav', function () {
 		it('next text', function(done) {
 			zPagenav.default.nextHtml = 'next'
 			var vmm = prepare()
-			Vue.nextTick(function() {
+			nextTick(function() {
 				var pts = $('#test').find('.page-item')
 				expect($('#test').find('.page-item').eq(7).find('span').eq(0).text()).to.equal('next')
 				done()
@@ -311,7 +307,7 @@ describe('vue-pagenav', function () {
 		it('prev screen reader text', function(done) {
 			zPagenav.default.prevSrHtml = 'prev0'
 			var vmm = prepare()
-			Vue.nextTick(function() {
+			nextTick(function() {
 				var pts = $('#test').find('.page-item')
 				expect($('#test').find('.page-item').eq(0).find('.sr-only').html()).to.equal('prev0')
 				done()
@@ -321,7 +317,7 @@ describe('vue-pagenav', function () {
 		it('next screen reader text', function(done) {
 			zPagenav.default.nextSrHtml = 'next0'
 			var vmm = prepare()
-			Vue.nextTick(function() {
+			nextTick(function() {
 				var pts = $('#test').find('.page-item')
 				expect($('#test').find('.page-item').eq(7).find('.sr-only').html()).to.equal('next0')
 				done()
@@ -332,8 +328,8 @@ describe('vue-pagenav', function () {
 			zPagenav.default.template = '<nav class="zpagenav" >' +
 					'<span class="pagination0 page-link m-r-1">total:{{total}}</span>' +
 					'<ul class="pagination">' +
-						'<li  @click="setPage(unit.page)" track-by="$index" v-for="unit in units" class="page-item {{unit.class}}" :disabled="unit.disabled">' +
-							'<a class="page-link" href="#p={{unit.page}}" aria-label="{{unit.ariaLabel}}">' +
+						'<li track-by="$index" v-for="unit in units" class="page-item {{unit.class}}" :disabled="unit.disabled">' +
+							'<a @click="setPage(unit.page)" class="page-link" href="setUrl(unit)" aria-label="{{unit.ariaLabel}}">' +
 								'<span v-if="unit.isPager" aria-hidden="true">{{{unit.html}}}</span>' +
 								'<span v-else>{{{unit.html}}}</span>' +
 								'<span v-if="unit.isPager" class="sr-only">{{{unit.srHtml}}}</span>' +
@@ -343,7 +339,7 @@ describe('vue-pagenav', function () {
 				'</nav>'
 			zPagenav.installed = false
 			var vmm = prepare()
-			Vue.nextTick(function() {
+			nextTick(function() {
 				expect($('#test .pagination0').length).to.equal(1)
 				done()
 			})

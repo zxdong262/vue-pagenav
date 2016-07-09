@@ -1,6 +1,6 @@
 /**
  * vue-pagenav
- * @version v1.3.0 - 2016-07-09
+ * @version v1.3.1 - 2016-07-09
  * @link http://html5beta.com/apps/vue-pagenav.html
  * @author ZHAO Xudong (zxdong@gmail.com)
  * @license MIT License, http://www.opensource.org/licenses/MIT
@@ -32,8 +32,8 @@ var zPagenav = {
 			'<nav class="zpagenav" >' +
 				'<span class="pagination page-link m-r-1">total:{{total}}</span>' +
 				'<ul class="pagination">' +
-					'<li  @click="setPage(unit.page)" track-by="$index" v-for="unit in units" class="page-item {{unit.class}}" :disabled="unit.disabled">' +
-						'<a class="page-link" href="#p={{unit.page}}" aria-label="{{unit.ariaLabel}}">' +
+					'<li track-by="$index" v-for="unit in units" class="page-item {{unit.class}}" :disabled="unit.disabled">' +
+						'<a @click="setPage(unit.page)" class="page-link" :href="setUrl(unit)" aria-label="{{unit.ariaLabel}}">' +
 							'<span v-if="unit.isPager" aria-hidden="true">{{{unit.html}}}</span>' +
 							'<span v-else>{{{unit.html}}}</span>' +
 							'<span v-if="unit.isPager" class="sr-only">{{{unit.srHtml}}}</span>' +
@@ -57,17 +57,23 @@ zPagenav.install = function(Vue) {
 			,maxLink: Number
 			,eventName: String
 			,pageHandler: Function
+			,createUrl: Function
 		}
 		,methods: {
 			setPage: function(page) {
+				console.log(page, 'll')
 				if(page === this.page) return false
 				if(this.pageHandler) this.pageHandler(page)
 				else if(this.$dispatch) this.$dispatch(this.eventName || zPagenav.default.eventName, page)
 			}
+			,setUrl: function(unit) {
+				return this.createUrl?this.createUrl(unit):(unit.page > 1?'#page=' + unit.page:'')
+			}
 		}
 		,computed: {
 			units: function() {
-
+				console.log(this.pageHandler, 'this.pageHandler')
+				console.log(this.eventName, 'eventName')
 				var option = zPagenav.default
 				var th = this
 				var page = th.page || option.page
