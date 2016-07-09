@@ -13,7 +13,7 @@ describe('vue-pagenav', function () {
 		$('#sandbox').remove(	)
 	})
 
-	var elem = '<div id="test"><zpagenav v-bind:page.sync="page", v-bind:page-size.sync="pageSize", v-bind:total.sync="total", v-bind:max-link.sync="maxLink"><zpagenav></div>'
+	var elem = '<div id="test"><zpagenav v-bind:page="page", v-bind:page-size="pageSize", v-bind:total="total", v-bind:max-link.sync="maxLink" v-bind:page-handler="pageHandler"><zpagenav></div>'
 	
 	function prepare(data, initOption) {
 		var element = $(elem).appendTo(sandboxEl)
@@ -25,6 +25,12 @@ describe('vue-pagenav', function () {
 				,pageSize: 10
 				,total: 509
 				,maxLink: 5
+			}
+			,methods: {
+				pageHandler: function(page) {
+					console.log(page)
+					this.page = page
+				}
 			}
 			,events: {
 				'page-change': function() {
@@ -143,28 +149,9 @@ describe('vue-pagenav', function () {
 
 	describe('event', function () {
 
-		it('dispatch event', function(done) {
-			var vmm = prepare()
-
-			Vue.nextTick(function() {
-				var pts = $('#test').find('.page-item')
-				expect(pts.length).to.equal(8)
-				$('#test .page-item').eq(2).trigger('click')
-				Vue.nextTick(function() {
-					var pts = $('#test').find('.page-item')
-					expect(pts.length).to.equal(8)
-					expect($('#test').find('.page-item.active').text()).to.equal('2')
-					expect(vmm.page === 2)
-					expect($('#test').data('events')).to.equal('yes')
-					done()
-				})
-
-			})
-		})
-
 		it('dispatch event with custom name', function(done) {
 
-			var elem = '<div id="test"><zpagenav v-bind:page.sync="page", v-bind:page-size.sync="pageSize", v-bind:total.sync="total", v-bind:max-link.sync="maxLink" :event-name="eventName"><zpagenav></div>'
+			var elem = '<div id="test"><zpagenav :page="page", :page-size="pageSize", :total="total", :max-link="maxLink" :event-name="eventName"><zpagenav></div>'
 			
 			var element = $(elem).appendTo(sandboxEl)
 			Vue.use(window.zPagenav)
@@ -179,6 +166,8 @@ describe('vue-pagenav', function () {
 				}
 				,events: {
 					'custom': function(page) {
+						console.log(page, 'encet')
+						this.page = page
 						$('#test').data('events', page)
 					}
 				}

@@ -1,6 +1,6 @@
 /**
  * vue-pagenav
- * @version v1.2.0 - 2016-06-28
+ * @version v1.3.0 - 2016-07-09
  * @link http://html5beta.com/apps/vue-pagenav.html
  * @author ZHAO Xudong (zxdong@gmail.com)
  * @license MIT License, http://www.opensource.org/licenses/MIT
@@ -56,12 +56,13 @@ zPagenav.install = function(Vue) {
 			,pageSize: Number
 			,maxLink: Number
 			,eventName: String
+			,pageHandler: Function
 		}
 		,methods: {
 			setPage: function(page) {
 				if(page === this.page) return false
-				this.page = page
-				this.$dispatch(this.eventName || zPagenav.default.eventName, page)
+				if(this.pageHandler) this.pageHandler(page)
+				else if(this.$dispatch) this.$dispatch(this.eventName || zPagenav.default.eventName, page)
 			}
 		}
 		,computed: {

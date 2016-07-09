@@ -22,11 +22,11 @@ npm install vue-pagenav
 <script src="vue-pagenav.min.js">
 ```
 
-### init
+### the vue 1.x way by event, deprecated!, but still supported
 ```html
 
 <div id="test">
-  <zpagenav :page.sync="page", :page-size.sync="pageSize", :total.sync="total", :max-link.sync="maxLink" :event-name="eventName" ><zpagenav>
+  <zpagenav :page="page", :page-size="pageSize", :total="total", :max-link.sync="maxLink" :event-name="eventName" ><zpagenav>
 </div>
 
 ```
@@ -41,7 +41,6 @@ Vue.use(zPagenav)
 //or direct use if window.Vue exists
 //Vue.use(window.zPagenav)
 
-// create instance
 new Vue({
   el: '#test',
   data: {
@@ -57,7 +56,34 @@ new Vue({
   }
   ,events: {
     'custom': function(page) {
+      this.page = page
       console.log(page)
+    }
+  }
+})
+```
+
+### new way to change page, supported by vue 1.0+/2.0+
+```html
+<div id="test">
+  <zpagenav :page="page", :page-size="pageSize", :total="total", :max-link="maxLink" :page-handler="pageHandler" ><zpagenav>
+</div>
+
+```
+
+```javascript
+new Vue({
+  el: '#test',
+  data: {
+    page: 1 //page
+    ,pageSize: 10 //pageSize,  default is 10
+    ,total: 509 //total item count
+    ,maxLink: 5 //how many links to show, must not less than 5,  default is 5
+  }
+  ,methods: {
+    pageHandler: function(page) {
+      //here you can do custom state update
+      this.page = page
     }
   }
 })
@@ -270,10 +296,13 @@ git clone https://github.com/zxdong262/vue-pagenav.git
 cd vue-pagenav
 npm install
 bower install
-gulp test
+npm run test
 
 #build
-gulp build
+npm run build
+
+#dev
+npm run dev
 ```
 
 ## License

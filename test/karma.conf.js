@@ -17,7 +17,7 @@ module.exports = function(config) {
     files: [
       'bower_components/vue/dist/vue.js',
       'bower_components/jquery/dist/jquery.js',
-      'dist/vue-pagenav.min.js',
+      'dist/vue-pagenav.js',
       'test/test.js'
     ],
 

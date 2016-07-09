@@ -39,12 +39,13 @@ zPagenav.install = function(Vue) {
 			,pageSize: Number
 			,maxLink: Number
 			,eventName: String
+			,pageHandler: Function
 		}
 		,methods: {
 			setPage: function(page) {
 				if(page === this.page) return false
-				this.page = page
-				this.$dispatch(this.eventName || zPagenav.default.eventName, page)
+				if(this.pageHandler) this.pageHandler(page)
+				else if(this.$dispatch) this.$dispatch(this.eventName || zPagenav.default.eventName, page)
 			}
 		}
 		,computed: {
