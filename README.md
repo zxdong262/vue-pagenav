@@ -26,7 +26,7 @@ npm install vue-pagenav
 ```html
 
 <div id="test">
-  <zpagenav :page="page", :page-size="pageSize", :total="total", :max-link.sync="maxLink" :event-name="eventName" ><zpagenav>
+  <zpagenav :page="page", :page-size="pageSize", :total="total", :max-link.sync="maxLink" :event-name="eventName" :create-url="createUrl"><zpagenav>
 </div>
 
 ```
@@ -66,7 +66,7 @@ new Vue({
 ### new way to change page, supported by vue 1.0+/2.0+
 ```html
 <div id="test">
-  <zpagenav :page="page", :page-size="pageSize", :total="total", :max-link="maxLink" :page-handler="pageHandler" ><zpagenav>
+  <zpagenav :page="page", :page-size="pageSize", :total="total", :max-link="maxLink" :page-handler="pageHandler" :create-url="createUrl"><zpagenav>
 </div>
 
 ```
@@ -84,6 +84,9 @@ new Vue({
     pageHandler: function(page) {
       //here you can do custom state update
       this.page = page
+    }
+    ,createUrl: function(unit) {
+      return unit.page > 1?'#page=' + unit.page:'#'
     }
   }
 })
@@ -273,8 +276,8 @@ var zPagenav = {
       '<nav class="zpagenav" >' +
         '<span class="pagination page-link m-r-1">total:{{total}}</span>' +
         '<ul class="pagination">' +
-          '<li  @click="setPage(unit.page)" track-by="$index" v-for="unit in units" class="page-item {{unit.class}}" :disabled="unit.disabled">' +
-            '<a class="page-link" href="#p={{unit.page}}" aria-label="{{unit.ariaLabel}}">' +
+          '<li track-by="$index" v-for="unit in units" class="page-item {{unit.class}}" :disabled="unit.disabled">' +
+            '<a @click.prevent="setPage(unit.page)" class="page-link" href="#p={{unit.page}}" aria-label="{{unit.ariaLabel}}">' +
               '<span v-if="unit.isPager" aria-hidden="true">{{{unit.html}}}</span>' +
               '<span v-else>{{{unit.html}}}</span>' +
               '<span v-if="unit.isPager" class="sr-only">{{{unit.srHtml}}}</span>' +

@@ -15,9 +15,9 @@ describe('vue-pagenav', function () {
 		$('#sandbox').remove(	)
 	})
 
-	var elem = '<div id="test"><zpagenav :page="page", :page-size="pageSize", :total="total", :event-name="eventName", :max-link.sync="maxLink" :page-handler="pageHandler"><zpagenav></div>'
+	var elem = '<div id="test"><zpagenav :page="page", :page-size="pageSize", :total="total", :event-name="eventName", :max-link.sync="maxLink" :page-handler="pageHandler" :create-url="createUrl"><zpagenav></div>'
 
-	var nextTick = Vue.nextTick
+	var nextTick = 	Vue.nextTick
 
 	function prepare(data, initOption, methods, events) {
 		var element = $(elem).appendTo(sandboxEl)
@@ -32,7 +32,6 @@ describe('vue-pagenav', function () {
 			}
 			,methods: {
 				pageHandler: function(page) {
-					console.log(page)
 					this.page = page
 				}
 			}
@@ -162,7 +161,6 @@ describe('vue-pagenav', function () {
 				eventName: 'custom'
 			}, {}, {}, {
 				custom: function(page) {
-					console.log(page, 'custom page event fiires')
 					this.page = page
 					$('#test').data('events', 'yes')
 				}
@@ -171,15 +169,14 @@ describe('vue-pagenav', function () {
 			nextTick(function() {
 				var pts = $('#test').find('.page-item')
 				expect(pts.length).to.equal(8)
-				console.log($('#test .page-item').eq(3).html())
-				$('#test .page-item').eq(3).children('a').eq(0).trigger(clickEvent)
-
+				$('#test .page-item').eq(3).trigger(clickEvent)
+				$('#test .page-item').eq(3).children('a').trigger(clickEvent)
 				nextTick(function() {
 					var pts = $('#test').find('.page-item')
 					expect(pts.length).to.equal(8)
 					expect($('#test').find('.page-item.active').text()).to.equal('3')
 					expect(vmm.page === 3)
-					expect($('#test').data('events')).to.equal(3)
+					expect($('#test').data('events')).to.equal('yes')
 					done()
 				})
 
@@ -324,12 +321,12 @@ describe('vue-pagenav', function () {
 			})
 		})
 
-		it('template', function(done) {
+		it('template and urlCreatror', function(done) {
 			zPagenav.default.template = '<nav class="zpagenav" >' +
 					'<span class="pagination0 page-link m-r-1">total:{{total}}</span>' +
 					'<ul class="pagination">' +
 						'<li track-by="$index" v-for="unit in units" class="page-item {{unit.class}}" :disabled="unit.disabled">' +
-							'<a @click="setPage(unit.page)" class="page-link" href="setUrl(unit)" aria-label="{{unit.ariaLabel}}">' +
+							'<a @click.prevent="setPage(unit.page)" class="page-link" :href="setUrl(unit)" aria-label="{{unit.ariaLabel}}">' +
 								'<span v-if="unit.isPager" aria-hidden="true">{{{unit.html}}}</span>' +
 								'<span v-else>{{{unit.html}}}</span>' +
 								'<span v-if="unit.isPager" class="sr-only">{{{unit.srHtml}}}</span>' +
@@ -338,9 +335,19 @@ describe('vue-pagenav', function () {
 					'</ul>' +
 				'</nav>'
 			zPagenav.installed = false
-			var vmm = prepare()
+			var vmm = prepare({}, {}, {
+				pageHandler: function(page) {
+					this.page = page
+				}
+				,createUrl: function(unit) {
+					return unit.page > 1?'/?page=' + unit.page:'/'
+				}
+			})
+			var host = 'http://localhost:8080/'
 			nextTick(function() {
 				expect($('#test .pagination0').length).to.equal(1)
+				expect($('#test').find('.page-item a').eq(0).prop('href')).to.equal(host)
+				expect($('#test').find('.page-item a').eq(2).prop('href')).to.equal(host + '?page=2')
 				done()
 			})
 		})

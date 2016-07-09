@@ -16,7 +16,7 @@ var zPagenav = {
 				'<span class="pagination page-link m-r-1">total:{{total}}</span>' +
 				'<ul class="pagination">' +
 					'<li track-by="$index" v-for="unit in units" class="page-item {{unit.class}}" :disabled="unit.disabled">' +
-						'<a @click="setPage(unit.page)" class="page-link" :href="setUrl(unit)" aria-label="{{unit.ariaLabel}}">' +
+						'<a @click.prevent="setPage(unit.page)" class="page-link" :href="setUrl(unit)" aria-label="{{unit.ariaLabel}}">' +
 							'<span v-if="unit.isPager" aria-hidden="true">{{{unit.html}}}</span>' +
 							'<span v-else>{{{unit.html}}}</span>' +
 							'<span v-if="unit.isPager" class="sr-only">{{{unit.srHtml}}}</span>' +
@@ -44,19 +44,17 @@ zPagenav.install = function(Vue) {
 		}
 		,methods: {
 			setPage: function(page) {
-				console.log(page, 'll')
 				if(page === this.page) return false
 				if(this.pageHandler) this.pageHandler(page)
 				else if(this.$dispatch) this.$dispatch(this.eventName || zPagenav.default.eventName, page)
 			}
 			,setUrl: function(unit) {
-				return this.createUrl?this.createUrl(unit):(unit.page > 1?'#page=' + unit.page:'')
+				return url = this.createUrl?this.createUrl(unit):(unit.page > 1?'#page=' + unit.page:'')
 			}
 		}
 		,computed: {
 			units: function() {
-				console.log(this.pageHandler, 'this.pageHandler')
-				console.log(this.eventName, 'eventName')
+
 				var option = zPagenav.default
 				var th = this
 				var page = th.page || option.page
