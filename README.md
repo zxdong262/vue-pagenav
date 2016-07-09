@@ -277,7 +277,7 @@ var zPagenav = {
         '<span class="pagination page-link m-r-1">total:{{total}}</span>' +
         '<ul class="pagination">' +
           '<li track-by="$index" v-for="unit in units" class="page-item {{unit.class}}" :disabled="unit.disabled">' +
-            '<a @click.prevent="setPage(unit.page)" class="page-link" href="#p={{unit.page}}" aria-label="{{unit.ariaLabel}}">' +
+            '<a @click.prevent="setPage(unit.page)" class="page-link"  :href="setPage(unit)" aria-label="{{unit.ariaLabel}}">' +
               '<span v-if="unit.isPager" aria-hidden="true">{{{unit.html}}}</span>' +
               '<span v-else>{{{unit.html}}}</span>' +
               '<span v-if="unit.isPager" class="sr-only">{{{unit.srHtml}}}</span>' +
