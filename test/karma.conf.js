@@ -18,7 +18,7 @@ module.exports = function(config) {
       'bower_components/vue/dist/vue.js',
       'bower_components/jquery/dist/jquery.js',
       'dist/vue-pagenav.js',
-      'test/test.js'
+      'test/unit-br/*.js'
     ],
 
     // list of files / patterns to exclude
@@ -41,7 +41,7 @@ module.exports = function(config) {
 
     // Start these browsers, currently available:
     // - Chrome
-    browsers: ['Chrome'],
+    browsers: ['PhantomJS'],
 
     // Timeouts for SauceLabs
     browserDisconnectTimeout: 10000, // default 2000

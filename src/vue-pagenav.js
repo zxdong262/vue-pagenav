@@ -1,5 +1,5 @@
 
-var zPagenav = {
+const zPagenav = {
 
 	default: {
 		page: 1
@@ -12,18 +12,18 @@ var zPagenav = {
 		,dotsHtml: '...'
 		,eventName: 'page-change'
 		,template: 
-			'<nav class="zpagenav" >' +
-				'<span class="pagination page-link m-r-1">total:{{total}}</span>' +
-				'<ul class="pagination">' +
-					'<li track-by="$index" v-for="unit in units" class="page-item {{unit.class}}" :disabled="unit.disabled">' +
-						'<a @click.prevent="setPage(unit.page)" class="page-link" :href="setUrl(unit)" aria-label="{{unit.ariaLabel}}">' +
-							'<span v-if="unit.isPager" aria-hidden="true">{{{unit.html}}}</span>' +
-							'<span v-else>{{{unit.html}}}</span>' +
-							'<span v-if="unit.isPager" class="sr-only">{{{unit.srHtml}}}</span>' +
-						'</a>' +
-					'</li>' +
-				'</ul>' +
-			'</nav>'
+			`<nav class="zpagenav" >
+				<span class="pagination page-link m-r-1">total:{{total}}</span>
+				<ul class="pagination">
+					<li track-by="$index" v-for="unit in units" :class="'page-item' + unit.class" :disabled="unit.disabled">
+						<a @click.prevent="setPage(unit.page)" class="page-link" :href="setUrl(unit)" :aria-label="unit.ariaLabel">
+							<span v-if="unit.isPager" aria-hidden="true" :html="unit.html"></span>
+							<span v-else :html="unit.html"></span>
+							<span v-if="unit.isPager" class="sr-only" :html="unit.srHtml"></span>
+						</a>
+					</li>
+				</ul>
+			</nav>`
 	}
 
 }
@@ -43,12 +43,12 @@ zPagenav.install = function(Vue) {
 			,createUrl: Function
 		}
 		,methods: {
-			setPage: function(page) {
+			setPage(page) {
 				if(page === this.page) return false
 				if(this.pageHandler) this.pageHandler(page)
 				else if(this.$dispatch) this.$dispatch(this.eventName || zPagenav.default.eventName, page)
 			}
-			,setUrl: function(unit) {
+			,setUrl(unit) {
 				return url = this.createUrl?this.createUrl(unit):(unit.page > 1?'#page=' + unit.page:'')
 			}
 		}

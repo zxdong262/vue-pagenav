@@ -1,0 +1,22 @@
+include parts/head1
+meta(name='description', content=siteDesc)
+meta(name='keywords', content=siteKeywords)
+title #{siteName}
+style.
+	#logo {
+		font-size: 240px;
+		margin: 0;
+	}
+	#logo:before {
+		margin: 0;
+	}
+include parts/head2
+#wrapper
+	#content.container
+		#app
+		.p-y-3
+
+		include parts/footer-html
+
+include parts/footer-js
+include parts/footer-end
