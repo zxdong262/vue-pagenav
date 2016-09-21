@@ -1,7 +1,7 @@
 // Karma configuration
 // http://karma-runner.github.io/0.12/config/configuration-file.html
 
-'use strict';
+let port = require('../build/config').karmaPort
 
 module.exports = function(config) {
 
@@ -15,10 +15,14 @@ module.exports = function(config) {
 
     // list of files / patterns to load in the browser
     files: [
-      'bower_components/vue/dist/vue.js',
-      'bower_components/jquery/dist/jquery.js',
-      'dist/vue-pagenav.js',
-      'test/unit-br/*.js'
+      'node_modules/vue/dist/vue.js',
+      'node_modules/jquery/dist/jquery.js',
+      {
+        pattern: './dist/vue-pagenav.js',
+        included: false,
+        watched: true
+      },
+      'test/test.js'
     ],
 
     // list of files / patterns to exclude
@@ -30,7 +34,7 @@ module.exports = function(config) {
     reporters: ['progress', 'coverage'],
 
     // web server port
-    port: 8080,
+    port: port,
 
     // level of logging
     // possible values: config.LOG_DISABLE || config.LOG_ERROR || config.LOG_WARN || config.LOG_INFO || config.LOG_DEBUG
@@ -53,14 +57,42 @@ module.exports = function(config) {
     singleRun: true,
 
     preprocessors: {
-      'src/{,*/}*.js': 'coverage'
+      'test/test.js': ['webpack', 'sourcemap', 'coverage'],
+      'dist/vue-pagenav.js': ['coverage']
+    },
+
+    webpack: {
+      devtool: 'inline-source-map'
+      ,externals: {
+        'vue': 'Vue',
+        'vue-pagenav': 'zPagenav'
+      },
+      module: {
+        loaders: [
+          {
+            test: /\.jsx?$/,
+            exclude: /node_modules/,
+            loader: 'babel-loader'
+          }
+        ]
+        ,postLoaders: [
+          { //delays coverage til after tests are run, fixing transpiled source coverage error
+            test: /\vue\-pagenav\.js$/,
+            exclude: /(test|node_modules)\//,
+            include: ['dist'],
+            loader: 'istanbul-instrumenter'
+          } 
+        ]
+      }
     },
 
     plugins: [
       'karma-mocha',
       'karma-chai-plugins',
       'karma-phantomjs-launcher',
-      'karma-coverage'
+      'karma-coverage',
+      'karma-webpack',
+      'karma-sourcemap-loader'
     ],
 
     // Coverage reporter generates the coverage
@@ -71,6 +103,6 @@ module.exports = function(config) {
       ]
     }
 
-  });
+  })
 
 };

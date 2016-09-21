@@ -12,18 +12,18 @@ const zPagenav = {
 		,dotsHtml: '...'
 		,eventName: 'page-change'
 		,template: 
-			`<nav class="zpagenav" >
-				<span class="pagination page-link m-r-1">total:{{total}}</span>
-				<ul class="pagination">
-					<li track-by="$index" v-for="unit in units" :class="'page-item' + unit.class" :disabled="unit.disabled">
-						<a @click.prevent="setPage(unit.page)" class="page-link" :href="setUrl(unit)" :aria-label="unit.ariaLabel">
-							<span v-if="unit.isPager" aria-hidden="true" :html="unit.html"></span>
-							<span v-else :html="unit.html"></span>
-							<span v-if="unit.isPager" class="sr-only" :html="unit.srHtml"></span>
-						</a>
-					</li>
-				</ul>
-			</nav>`
+			`<nav class="zpagenav">` +
+				`<span class="pagination page-link m-r-1">total:{{total}}</span>` +
+				`<ul class="pagination">` +
+					`<li track-by="$index" v-for="unit in units" :class="'page-item ' + unit.class" :disabled="unit.disabled">` +
+						`<a @click.prevent="setPage(unit.page)" class="page-link" :href="setUrl(unit)" :aria-label="unit.ariaLabel">` +
+							`<span v-if="unit.isPager" aria-hidden="true" v-html="unit.html"></span>` +
+							`<span v-else v-html="unit.html"></span>` +
+							`<span v-if="unit.isPager" class="sr-only" v-html="unit.srHtml"></span>` +
+						`</a>` +
+					`</li>` +
+				`</ul>` +
+			`</nav>`
 	}
 
 }
@@ -49,31 +49,31 @@ zPagenav.install = function(Vue) {
 				else if(this.$dispatch) this.$dispatch(this.eventName || zPagenav.default.eventName, page)
 			}
 			,setUrl(unit) {
-				return url = this.createUrl?this.createUrl(unit):(unit.page > 1?'#page=' + unit.page:'')
+				return this.createUrl?this.createUrl(unit):(unit.page > 1?'#page=' + unit.page:'')
 			}
 		}
 		,computed: {
 			units: function() {
 
-				var option = zPagenav.default
-				var th = this
-				var page = th.page || option.page
-				var pageSize = th.pageSize || option.pageSize
-				var total = th.total || option.total
-				var maxLink = th.maxLink >5?th.maxLink:5
+				let option = zPagenav.default
+				let th = this
+				let page = th.page || option.page
+				let pageSize = th.pageSize || option.pageSize
+				let total = th.total || option.total
+				let maxLink = th.maxLink >5?th.maxLink:5
 
-				var linksCount = Math.ceil(total/pageSize)
+				let linksCount = Math.ceil(total/pageSize)
 
 				if(page > linksCount) page = linksCount + 0
 
-				var hasPrev = page > 1
-				var hasNext = page < linksCount
-				var realMaxLink = maxLink > linksCount?linksCount:maxLink
-				var len1, len2, len3, shouldInsertDots12, shouldInsertDots23
-				var len2Start, len3Start
+				let hasPrev = page > 1
+				let hasNext = page < linksCount
+				let realMaxLink = maxLink > linksCount?linksCount:maxLink
+				let len1, len2, len3, shouldInsertDots12, shouldInsertDots23
+				let len2Start, len3Start
 
-				var units = []
-				var arr = computeLens()
+				let units = []
+				let arr = computeLens()
 
 				units.push({
 					class: hasPrev?'':'disabled'
@@ -86,7 +86,7 @@ zPagenav.install = function(Vue) {
 					,ariaLabel: option.prevSrHtml
 				})
 
-				var dotUnit = {
+				let dotUnit = {
 					class: 'disabled'
 					,page: page
 					,isPager: false
@@ -95,7 +95,7 @@ zPagenav.install = function(Vue) {
 					,html: option.dotsHtml
 				}
 
-				for(var i = 0, len = arr.length;i < len;i ++) {
+				for(let i = 0, len = arr.length;i < len;i ++) {
 					pushUnit(arr[i])
 				}
 
@@ -125,20 +125,20 @@ zPagenav.install = function(Vue) {
 				}
 
 				function computeLens() {
-					var a4 = Math.floor((realMaxLink - 2) / 2)
-					var a5 = realMaxLink - 3 - a4
-					var s2 = page - a4
-					var s3 = page + a5
+					let a4 = Math.floor((realMaxLink - 2) / 2)
+					let a5 = realMaxLink - 3 - a4
+					let s2 = page - a4
+					let s3 = page + a5
 					if(s2 < 2) {
 						s2 = 2
 					}
 					else if(s3 > linksCount) {
 						s2 = linksCount - (realMaxLink - 2)
 					}
-					var arr = [1]
+					let arr = [1]
 					if(s2 > 2) arr.push('dot')
-					var it
-					for(var i = 0, len = realMaxLink - 2 < 1?realMaxLink - 1:realMaxLink - 2;i < len;i ++) {
+					let it
+					for(let i = 0, len = realMaxLink - 2 < 1?realMaxLink - 1:realMaxLink - 2;i < len;i ++) {
 						it = i + s2
 						arr.push(it)
 					}
@@ -154,3 +154,4 @@ zPagenav.install = function(Vue) {
 	})
 }
 
+module.exports = exports.default = zPagenav

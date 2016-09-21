@@ -7,7 +7,7 @@
     "pagenav"
   ],
   "scripts": {
-    "start": "npm run dev:server && npm run dev:client && npm run build",
+    "start": "./node_modules/.bin/npm-run-all -p dev:server dev:client ",
     "build": "rm dist/*.* && NODE_ENV=production ./node_modules/.bin/webpack -p --progress",
     "dev:server": "node build/dev-server",
     "dev:server-debug": "node --debug build/dev-server",

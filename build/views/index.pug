@@ -14,9 +14,58 @@ include parts/head2
 #wrapper
 	#content.container
 		#app
+			form
+				.form-group
+					label
+						span.text-danger * 
+						span maxLink: how many links to render max
+					input.form-control(type='number', name='maxLinkShow', v-model='maxLink', number)
+
+				.form-group
+					label
+						span.text-danger * 
+						span pageSize: items to show per page
+					input.form-control(type='number', name='itemPerPage', v-model='pageSize', number)
+
+				.form-group
+					label
+						span.text-danger * 
+						span itemTotal: how many items in total
+					input.form-control(type='number', name='itemTotal', v-model='total', number)
+
+				.form-group
+					label
+						span.text-danger *  
+						span page: the page number
+					input.form-control(type='number', name='page', v-model='page', number)
+
+
+				.result
+					zpagenav(:page='page', :page-size='pageSize', :total.sync='total', :max-link='maxLink', :page-handler='pageHandler', :create-url='createUrl')
+
+
 		.p-y-3
 
 		include parts/footer-html
 
 include parts/footer-js
+script.
+	Vue.config.debug = true
+	Vue.use(window.zPagenav)
+	var vue = new Vue({
+		el: '#app'
+		,data: {
+			page: 1
+			,pageSize: 10
+			,total: 509
+			,maxLink: 5
+		}
+		,methods: {
+			pageHandler: function(page) {
+				//here you can do custom state update
+				this.page = page
+			}
+		}
+	})
+
 include parts/footer-end

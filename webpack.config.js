@@ -7,8 +7,7 @@ const today = new Date().toISOString().substr(0, 10)
 
 let config = {
   entry: {
-    'vue-pagenav': ['./src/vue-pagenav.js'],
-    app: './src/index.js'
+    'vue-pagenav': './src/vue-pagenav.js'
   },
   output: {
     path: __dirname + '/dist/', //输出文件目录
@@ -92,10 +91,6 @@ if (process.env.NODE_ENV === 'production') {
       `
       , { raw: true })
   ]
-
-  config.entry = {
-    'vue-pagenav': ['./src/vue-pagenav.js']
-  },
 
   config.output = {
     path: __dirname + '/dist/', //输出文件目录

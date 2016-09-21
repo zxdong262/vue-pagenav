@@ -21,9 +21,9 @@
   "ignore": [
     "**/.*",
     "node_modules",
-    "bower_components",
     "test",
-    "tests"
+    "src",
+    "build"
   ],
   "dependencies": {
     "vue": "^1.0.18"
