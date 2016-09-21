@@ -1,4 +1,7 @@
-# vue-pagenav [![Travis][build-badge]][build] [![Codecov][codecov-badge]][codecov]
+# vue-pagenav
+
+[![Travis][build-badge]][build] [![Codecov][codecov-badge]][codecov]
+
 a vue pagenav plugin
 
 ## check the demo
