@@ -1,6 +1,4 @@
-# vue-pagenav
-[![Build Status](https://travis-ci.org/zxdong262/vue-pagenav.svg?branch=master)](https://travis-ci.org/zxdong262/vue-pagenav)
-
+# vue-pagenav [![Travis][build-badge]][build] [![Codecov][codecov-badge]][codecov]
 a vue pagenav plugin
 
 ## check the demo
@@ -273,18 +271,18 @@ var zPagenav = {
     ,nextSrHtml: 'Next' //next button screen reader html
     ,dotsHtml: '...' //sepration element html
     ,template: //template
-      '<nav class="zpagenav" >' +
-        '<span class="pagination page-link m-r-1">total:{{total}}</span>' +
-        '<ul class="pagination">' +
-          '<li track-by="$index" v-for="unit in units" class="page-item {{unit.class}}" :disabled="unit.disabled">' +
-            '<a @click.prevent="setPage(unit.page)" class="page-link"  :href="setPage(unit)" aria-label="{{unit.ariaLabel}}">' +
-              '<span v-if="unit.isPager" aria-hidden="true">{{{unit.html}}}</span>' +
-              '<span v-else>{{{unit.html}}}</span>' +
-              '<span v-if="unit.isPager" class="sr-only">{{{unit.srHtml}}}</span>' +
-            '</a>' +
-          '</li>' +
-        '</ul>' +
-      '</nav>'
+			`<nav class="zpagenav">` +
+				`<span class="pagination page-link m-r-1">total:{{total}}</span>` +
+				`<ul class="pagination">` +
+					`<li track-by="$index" v-for="unit in units" :class="'page-item ' + unit.class" :disabled="unit.disabled">` +
+						`<a @click.prevent="setPage(unit.page)" class="page-link" :href="setUrl(unit)" :aria-label="unit.ariaLabel">` +
+							`<span v-if="unit.isPager" aria-hidden="true" v-html="unit.html"></span>` +
+							`<span v-else v-html="unit.html"></span>` +
+							`<span v-if="unit.isPager" class="sr-only" v-html="unit.srHtml"></span>` +
+						`</a>` +
+					`</li>` +
+				`</ul>` +
+			`</nav>`
   }
 
 }
@@ -293,20 +291,25 @@ var zPagenav = {
 zPagenav.default.nextHtml = 'next'
 ```
 
-## test & build
+## test & build & dev
 ```bash
 git clone https://github.com/zxdong262/vue-pagenav.git
 cd vue-pagenav
 npm install
-bower install
 npm run test
 
 #build
 npm run build
 
 #dev
-npm run dev
+npm start
 ```
 
 ## License
 MIT
+
+
+[build-badge]: https://img.shields.io/travis/zxdong262/vue-pagenav/master.svg?style=flat-square
+[build]: https://travis-ci.org/zxdong262/vue-pagenav
+[codecov-badge]: https://img.shields.io/codecov/c/github/zxdong262/vue-pagenav/dev.svg?style=flat-square
+[codecov]: https://codecov.io/gh/zxdong262/vue-pagenav
