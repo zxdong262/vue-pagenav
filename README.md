@@ -311,5 +311,5 @@ MIT
 
 [build-badge]: https://img.shields.io/travis/zxdong262/vue-pagenav/master.svg?style=flat-square
 [build]: https://travis-ci.org/zxdong262/vue-pagenav
-[codecov-badge]: https://img.shields.io/codecov/c/github/zxdong262/vue-pagenav/dev.svg?style=flat-square
+[codecov-badge]: https://img.shields.io/codecov/c/github/zxdong262/vue-pagenav/master.svg?style=flat-square
 [codecov]: https://codecov.io/gh/zxdong262/vue-pagenav
