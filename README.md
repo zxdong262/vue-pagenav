@@ -2,8 +2,7 @@
 
 [![Travis][build-badge]][build] [![Codecov][codecov-badge]][codecov]
 
-a vue pagenav plugin
-
+a vue pagenav plugin(support vue 1/2)
 ## check the demo
 
 <a href="http://html5beta.com/apps/vue-pagenav.html">http://html5beta.com/apps/vue-pagenav.html</a>
