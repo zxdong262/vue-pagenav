@@ -1,7 +1,7 @@
 {
   "name": "vue-pagenav",
   "description": "a vuejs pagenav plugin",
-  "version": "1.5.0",
+  "version": "2.0.0",
   "keywords": [
     "vuejs",
     "pagenav"
@@ -68,7 +68,7 @@
     "webpack-dev-server": "^1.14.1"
   },
   "peerDependencies": {
-    "vue": "^1.0.26"
+    "vue": "^2"
   },
   "engines": {
     "node": ">=6"

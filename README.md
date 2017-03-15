@@ -2,7 +2,10 @@
 
 [![Travis][build-badge]][build] [![Codecov][codecov-badge]][codecov]
 
-a vue pagenav plugin(support vue 1/2)
+a vue pagenav plugin.
+
+(since v2.0.0 support vue 2 only, use 1.x for vue1+)
+
 ## check the demo
 
 <a href="http://html5beta.com/apps/vue-pagenav.html">http://html5beta.com/apps/vue-pagenav.html</a>
@@ -10,8 +13,12 @@ a vue pagenav plugin(support vue 1/2)
 ## get
 ```bash
 bower install vue-pagenav
-#or 
+
+#for 1.0+ users, bower install vue-pagenav#1
+#or
 npm install vue-pagenav
+
+#for 1.0+ users, npm install vue-pagenav@1
 ```
 
 ## use
@@ -22,7 +29,36 @@ npm install vue-pagenav
 <script src="vue-pagenav.min.js">
 ```
 
-### the vue 1.x way by event, deprecated!, but still supported
+### new way to change page, supported by vue 1.0+/2.0+
+```html
+<div id="test">
+  <zpagenav :page="page", :page-size="pageSize", :total="total", :max-link="maxLink" :page-handler="pageHandler" :create-url="createUrl"><zpagenav>
+</div>
+
+```
+
+```javascript
+new Vue({
+  el: '#test',
+  data: {
+    page: 1 //page
+    ,pageSize: 10 //pageSize,  default is 10
+    ,total: 509 //total item count
+    ,maxLink: 5 //how many links to show, must not less than 5,  default is 5
+  }
+  ,methods: {
+    pageHandler: function(page) {
+      //here you can do custom state update
+      this.page = page
+    }
+    ,createUrl: function(unit) {
+      return unit.page > 1?'#page=' + unit.page:'#'
+    }
+  }
+})
+```
+
+### the vue 1.x way by event, for vue 1.x
 ```html
 
 <div id="test">
@@ -52,41 +88,12 @@ new Vue({
     // page change event name, default is 'page-change',
     // optional
     // for different pagenav, should use different name
-    ,eventName: 'custom' 
+    ,eventName: 'custom'
   }
   ,events: {
     'custom': function(page) {
       this.page = page
       console.log(page)
-    }
-  }
-})
-```
-
-### new way to change page, supported by vue 1.0+/2.0+
-```html
-<div id="test">
-  <zpagenav :page="page", :page-size="pageSize", :total="total", :max-link="maxLink" :page-handler="pageHandler" :create-url="createUrl"><zpagenav>
-</div>
-
-```
-
-```javascript
-new Vue({
-  el: '#test',
-  data: {
-    page: 1 //page
-    ,pageSize: 10 //pageSize,  default is 10
-    ,total: 509 //total item count
-    ,maxLink: 5 //how many links to show, must not less than 5,  default is 5
-  }
-  ,methods: {
-    pageHandler: function(page) {
-      //here you can do custom state update
-      this.page = page
-    }
-    ,createUrl: function(unit) {
-      return unit.page > 1?'#page=' + unit.page:'#'
     }
   }
 })

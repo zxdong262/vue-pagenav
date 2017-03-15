@@ -10,12 +10,11 @@ const zPagenav = {
 		,prevSrHtml: 'Previous'
 		,nextSrHtml: 'Next'
 		,dotsHtml: '...'
-		,eventName: 'page-change'
-		,template: 
+		,template:
 			`<nav class="zpagenav">` +
 				`<span class="pagination page-link m-r-1">total:{{total}}</span>` +
 				`<ul class="pagination">` +
-					`<li track-by="$index" v-for="unit in units" :class="'page-item ' + unit.class" :disabled="unit.disabled">` +
+					`<li :key="index" v-for="(unit, index) in units" :class="'page-item ' + unit.class" :disabled="unit.disabled">` +
 						`<a @click.prevent="setPage(unit.page)" class="page-link" :href="setUrl(unit)" :aria-label="unit.ariaLabel">` +
 							`<span v-if="unit.isPager" aria-hidden="true" v-html="unit.html"></span>` +
 							`<span v-else v-html="unit.html"></span>` +
@@ -38,7 +37,6 @@ zPagenav.install = function(Vue) {
 			,total: Number
 			,pageSize: Number
 			,maxLink: Number
-			,eventName: String
 			,pageHandler: Function
 			,createUrl: Function
 		}
@@ -46,10 +44,9 @@ zPagenav.install = function(Vue) {
 			setPage(page) {
 				if(page === this.page) return false
 				if(this.pageHandler) this.pageHandler(page)
-				else if(this.$dispatch) this.$dispatch(this.eventName || zPagenav.default.eventName, page)
 			}
 			,setUrl(unit) {
-				return this.createUrl?this.createUrl(unit):(unit.page > 1?'#page=' + unit.page:'')
+				return this.createUrl ? this.createUrl(unit) : (unit.page > 1?'#page=' + unit.page:'')
 			}
 		}
 		,computed: {
@@ -60,7 +57,7 @@ zPagenav.install = function(Vue) {
 				let page = th.page || option.page
 				let pageSize = th.pageSize || option.pageSize
 				let total = th.total || option.total
-				let maxLink = th.maxLink >5?th.maxLink:5
+				let maxLink = th.maxLink > 5 ? th.maxLink : 5
 
 				let linksCount = Math.ceil(total/pageSize)
 

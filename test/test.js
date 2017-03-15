@@ -1,6 +1,6 @@
 
 import {karmaPort} from '../build/config'
-import zPagenav from '../dist/vue-pagenav.js'
+import zPagenav from '../dist/vue-pagenav'
 import Vue from 'vue'
 
 describe('vue-pagenav', function () {
@@ -15,14 +15,14 @@ describe('vue-pagenav', function () {
   let clickEvent = $.Event('click')
 
 	afterEach(function() {
-		vmm.$destroy()
-		zPagenav.installed = false
-		$('#sandbox').remove(	)
+		if (vmm && vmm.$destroy) vmm.$destroy()
+		if (zPagenav) zPagenav.installed = false
+		$('#sandbox').remove()
 	})
 
-	let elem = '<div id="test"><zpagenav :page="page", :page-size="pageSize", :total="total", :event-name="eventName", :max-link.sync="maxLink" :page-handler="pageHandler" :create-url="createUrl"><zpagenav></div>'
+	let elem = '<div id="test"><zpagenav :page="page" :page-size="pageSize" :total="total" :max-link.sync="maxLink" :page-handler="pageHandler" :create-url="createUrl"><zpagenav></div>'
 
-	let nextTick = 	Vue.nextTick
+	let nextTick = Vue.nextTick
 
 	function prepare(data, initOption, methods, events) {
 		let element = $(elem).appendTo(sandboxEl)
@@ -38,19 +38,21 @@ describe('vue-pagenav', function () {
 			,methods: {
 				pageHandler: function(page) {
 					this.page = page
-				}
+				},
+        createUrl: function(unit) {
+          return unit.page > 1 ? '#page=' + unit.page : ''
+        }
 			}
-			,events: {
-				'page-change': function(page) {
-					this.page = page
-					$('#test').data('events', 'yes')
-				}
-			}
+			// ,events: {
+			// 	'page-change': function(page) {
+			// 		this.page = page
+			// 		$('#test').data('events', 'yes')
+			// 	}
+			// }
 		}
 		if(data) $.extend(defs.data, data)
 		if(methods) defs.methods = methods
 		if(events) defs.events = events
-
 		vmm = new Vue(defs)
 		return vmm
 	}
@@ -158,92 +160,92 @@ describe('vue-pagenav', function () {
 
 	})
 
-	describe('event', function () {
+	// describe('event', function () {
 
-		it('dispatch event with custom name', function(done) {
+	// 	it('dispatch event with custom name', function(done) {
 
-			let vmm = prepare({
-				eventName: 'custom'
-			}, {}, {}, {
-				custom: function(page) {
-					this.page = page
-					$('#test').data('events', 'yes')
-				}
-			})
+	// 		let vmm = prepare({
+	// 			eventName: 'custom'
+	// 		}, {}, {}, {
+	// 			custom: function(page) {
+	// 				this.page = page
+	// 				$('#test').data('events', 'yes')
+	// 			}
+	// 		})
 
-			nextTick(function() {
-				let pts = $('#test').find('.page-item')
-				expect(pts.length).to.equal(8)
-				$('#test .page-item').eq(3).trigger(clickEvent)
-				$('#test .page-item').eq(3).children('a').trigger(clickEvent)
-				nextTick(function() {
-					let pts = $('#test').find('.page-item')
-					expect(pts.length).to.equal(8)
-					expect($('#test').find('.page-item.active').text()).to.equal('3')
-					expect(vmm.page === 3)
-					expect($('#test').data('events')).to.equal('yes')
-					done()
-				})
+	// 		nextTick(function() {
+	// 			let pts = $('#test').find('.page-item')
+	// 			expect(pts.length).to.equal(8)
+	// 			$('#test .page-item').eq(3).trigger(clickEvent)
+	// 			$('#test .page-item').eq(3).children('a').trigger(clickEvent)
+	// 			nextTick(function() {
+	// 				let pts = $('#test').find('.page-item')
+	// 				expect(pts.length).to.equal(8)
+	// 				expect($('#test').find('.page-item.active').text()).to.equal('3')
+	// 				expect(vmm.page === 3)
+	// 				expect($('#test').data('events')).to.equal('yes')
+	// 				done()
+	// 			})
 
-			})
+	// 		})
 
-		})
+	// 	})
 
-		it('click link page=2', function(done) {
-			let vmm = prepare()
+	// 	it('click link page=2', function(done) {
+	// 		let vmm = prepare()
 
-			nextTick(function() {
-				let pts = $('#test').find('.page-item')
-				expect(pts.length).to.equal(8)
-				$('#test .page-item').eq(2).children('a').trigger(clickEvent)
-				nextTick(function() {
-					let pts = $('#test').find('.page-item')
-					expect(pts.length).to.equal(8)
-					expect($('#test').find('.page-item.active').text()).to.equal('2')
-					expect(vmm.page === 2)
-					done()
-				})
+	// 		nextTick(function() {
+	// 			let pts = $('#test').find('.page-item')
+	// 			expect(pts.length).to.equal(8)
+	// 			$('#test .page-item').eq(2).children('a').trigger(clickEvent)
+	// 			nextTick(function() {
+	// 				let pts = $('#test').find('.page-item')
+	// 				expect(pts.length).to.equal(8)
+	// 				expect($('#test').find('.page-item.active').text()).to.equal('2')
+	// 				expect(vmm.page === 2)
+	// 				done()
+	// 			})
 
-			})
-		})
+	// 		})
+	// 	})
 
-		it('click link pagenext', function(done) {
-			let vmm = prepare()
+	// 	it('click link pagenext', function(done) {
+	// 		let vmm = prepare()
 
-			nextTick(function() {
-				let pts = $('#test').find('.page-item')
-				expect(pts.length).to.equal(8)
-				$('#test .page-item:last').children('a').eq(0).trigger(clickEvent)
-				nextTick(function() {
-					let pts = $('#test').find('.page-item')
-					expect(pts.length).to.equal(8)
-					expect($('#test').find('.page-item.active').text()).to.equal('2')
-					expect(vmm.page === 2)
-					done()
-				})
+	// 		nextTick(function() {
+	// 			let pts = $('#test').find('.page-item')
+	// 			expect(pts.length).to.equal(8)
+	// 			$('#test .page-item:last').children('a').eq(0).trigger(clickEvent)
+	// 			nextTick(function() {
+	// 				let pts = $('#test').find('.page-item')
+	// 				expect(pts.length).to.equal(8)
+	// 				expect($('#test').find('.page-item.active').text()).to.equal('2')
+	// 				expect(vmm.page === 2)
+	// 				done()
+	// 			})
 
-			})
-		})
+	// 		})
+	// 	})
 
-		it('click link page=51', function(done) {
-			let vmm = prepare()
+	// 	it('click link page=51', function(done) {
+	// 		let vmm = prepare()
 
-			nextTick(function() {
-				let pts = $('#test').find('.page-item')
-				expect(pts.length).to.equal(8)
-				$('#test .page-item').eq(6).children('a').eq(0).trigger(clickEvent)
-				nextTick(function() {
-					let pts = $('#test').find('.page-item')
-					expect(pts.length).to.equal(8)
-					expect($('#test').find('.page-item.active').text()).to.equal('51')
-					expect(vmm.page === 51)
-					done()
-				})
+	// 		nextTick(function() {
+	// 			let pts = $('#test').find('.page-item')
+	// 			expect(pts.length).to.equal(8)
+	// 			$('#test .page-item').eq(6).children('a').eq(0).trigger(clickEvent)
+	// 			nextTick(function() {
+	// 				let pts = $('#test').find('.page-item')
+	// 				expect(pts.length).to.equal(8)
+	// 				expect($('#test').find('.page-item.active').text()).to.equal('51')
+	// 				expect(vmm.page === 51)
+	// 				done()
+	// 			})
 
-			})
-		})
+	// 		})
+	// 	})
 
-	})
+	// })
 
 	describe('data bind', function () {
 
@@ -330,7 +332,7 @@ describe('vue-pagenav', function () {
 			zPagenav.default.template = `<nav class="zpagenav" >
 					<span class="pagination0 page-link m-r-1">total:{{total}}</span>
 					<ul class="pagination">
-						<li track-by="$index" v-for="unit in units" :class="'page-item ' + unit.class" :disabled="unit.disabled">
+						<li :key="index" v-for="(unit, index) in units" :class="'page-item ' + unit.class" :disabled="unit.disabled">
 							<a @click.prevent="setPage(unit.page)" class="page-link" :href="setUrl(unit)" :aria-label="unit.ariaLabel">
 								<span v-if="unit.isPager" aria-hidden="true" v-html="unit.html"></span>
 								<span v-else v-html="unit.html"></span>

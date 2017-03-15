@@ -52,13 +52,6 @@ return /******/ (function(modules) { // webpackBootstrap
 /************************************************************************/
 /******/ ([
 /* 0 */
-/***/ function(module, exports, __webpack_require__) {
-
-	module.exports = __webpack_require__(1);
-
-
-/***/ },
-/* 1 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -74,8 +67,7 @@ return /******/ (function(modules) { // webpackBootstrap
 			prevSrHtml: 'Previous',
 			nextSrHtml: 'Next',
 			dotsHtml: '...',
-			eventName: 'page-change',
-			template: '<nav class="zpagenav">' + '<span class="pagination page-link m-r-1">total:{{total}}</span>' + '<ul class="pagination">' + '<li track-by="$index" v-for="unit in units" :class="\'page-item \' + unit.class" :disabled="unit.disabled">' + '<a @click.prevent="setPage(unit.page)" class="page-link" :href="setUrl(unit)" :aria-label="unit.ariaLabel">' + '<span v-if="unit.isPager" aria-hidden="true" v-html="unit.html"></span>' + '<span v-else v-html="unit.html"></span>' + '<span v-if="unit.isPager" class="sr-only" v-html="unit.srHtml"></span>' + '</a>' + '</li>' + '</ul>' + '</nav>'
+			template: '<nav class="zpagenav">' + '<span class="pagination page-link m-r-1">total:{{total}}</span>' + '<ul class="pagination">' + '<li :key="index" v-for="(unit, index) in units" :class="\'page-item \' + unit.class" :disabled="unit.disabled">' + '<a @click.prevent="setPage(unit.page)" class="page-link" :href="setUrl(unit)" :aria-label="unit.ariaLabel">' + '<span v-if="unit.isPager" aria-hidden="true" v-html="unit.html"></span>' + '<span v-else v-html="unit.html"></span>' + '<span v-if="unit.isPager" class="sr-only" v-html="unit.srHtml"></span>' + '</a>' + '</li>' + '</ul>' + '</nav>'
 		}
 	
 	};
@@ -90,14 +82,13 @@ return /******/ (function(modules) { // webpackBootstrap
 				total: Number,
 				pageSize: Number,
 				maxLink: Number,
-				eventName: String,
 				pageHandler: Function,
 				createUrl: Function
 			},
 			methods: {
 				setPage: function setPage(page) {
 					if (page === this.page) return false;
-					if (this.pageHandler) this.pageHandler(page);else if (this.$dispatch) this.$dispatch(this.eventName || zPagenav.default.eventName, page);
+					if (this.pageHandler) this.pageHandler(page);
 				},
 				setUrl: function setUrl(unit) {
 					return this.createUrl ? this.createUrl(unit) : unit.page > 1 ? '#page=' + unit.page : '';
