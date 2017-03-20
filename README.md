@@ -32,7 +32,7 @@ npm install vue-pagenav
 ### new way to change page, supported by vue 1.0+/2.0+
 ```html
 <div id="test">
-  <zpagenav :page="page", :page-size="pageSize", :total="total", :max-link="maxLink" :page-handler="pageHandler" :create-url="createUrl"><zpagenav>
+  <zpagenav :page="page" :page-size="pageSize" :total="total" :max-link="maxLink" :page-handler="pageHandler" :create-url="createUrl"><zpagenav>
 </div>
 
 ```
